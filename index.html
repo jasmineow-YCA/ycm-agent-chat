@@ -20,10 +20,12 @@
   --accent:#8B5CF6; --accent-fg:#B794FF; --accent-soft:rgba(139,92,246,0.15); --accent-off:#2E2547; --accent-off-fg:#8D7FBF;
   --coin:#FFB020; --coin-ink:#3A2A0E; --tag:#5B21B6; --tag-fg:#EDE4FF;
   --grad:linear-gradient(135deg,#FF6FD8 0%,#A855F7 55%,#5B4BE0 100%);
+  --stage1:#1D1033; --stage2:#060608; --bezel:#1B1B20; --tabbg:#1F1A2E;
   --font:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 var(--font);overflow:hidden;-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
@@ -36,9 +38,59 @@ img{max-width:100%}
 .col{width:100%;max-width:640px;margin:0 auto}
 .screen{flex:1;min-height:0;display:flex;flex-direction:column}
 
+/* phone frame on wide screens */
+#app{position:relative;background:var(--bg)}
+.frametoggle{display:none}
+@media (min-width:700px) and (min-height:620px){
+  body:not(.full){display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 25%,var(--stage1) 0%,var(--stage2) 65%)}
+  body:not(.full) #app{width:390px;height:min(844px,calc(100% - 56px));flex:none;border-radius:52px;border:12px solid var(--bezel);box-shadow:0 0 0 2px var(--line2),0 40px 90px rgba(0,0,0,.65);overflow:hidden}
+  body:not(.full) #app::after{content:"";position:absolute;left:50%;bottom:7px;transform:translateX(-50%);width:120px;height:4px;border-radius:2px;background:rgba(255,255,255,.35);z-index:30;pointer-events:none}
+  .frametoggle{display:flex;position:fixed;top:max(16px,env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));z-index:40;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px}
+  .frametoggle button{border:0;background:none;color:var(--muted);font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:9px}
+  .frametoggle button.on{background:var(--chip);color:var(--fg)}
+}
+
 /* explore */
-.ex{flex:1;min-height:0;overflow-y:auto}
-.ex img{display:block;width:100%;max-width:480px;margin:0 auto}
+.ex{flex:1;min-height:0;overflow-y:auto;padding-block:10px 24px}
+.ex .col{display:flex;flex-direction:column;gap:22px}
+.exhd{display:flex;align-items:center;gap:10px}
+.exhd b{flex:1;font-size:26px;letter-spacing:-.01em}
+.round{width:40px;height:40px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:var(--chip);color:var(--fg);border:0}
+.round.crown{background:#3A2A0E;color:var(--coin)}
+.cwrap{display:flex;flex-direction:column}
+.ftabs{display:flex;gap:4px;padding-left:10px;align-items:flex-end}
+.ftab{height:34px;padding:0 16px;border-radius:12px 12px 0 0;background:#141418;color:var(--dim);font-weight:600;font-size:14px;display:flex;align-items:center;gap:7px;border:0}
+.ftab.on{height:40px;background:var(--tabbg);color:var(--fg);font-weight:700;font-size:14.5px;border:1.5px solid var(--accent);border-bottom:0;margin-bottom:-1.5px;position:relative;z-index:2}
+.composer{border:1.5px solid var(--accent);border-radius:20px;background:var(--tabbg);box-shadow:0 0 28px rgba(168,85,247,.22);padding:14px 12px 10px 14px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:1}
+#exin{width:100%;resize:none;background:transparent;border:0;outline:none;color:var(--fg);font:16px/1.45 var(--font);min-height:48px;max-height:150px;overflow-y:auto;padding:0}
+#exin::placeholder{color:var(--dim)}
+.crow{display:flex;align-items:center;gap:8px}
+.crow .sp{flex:1}
+.cplus{width:52px;height:34px;border-radius:17px;border:0;background:#2E2A3C;color:var(--fg);display:flex;align-items:center;justify-content:center}
+.wand{width:38px;height:34px;border-radius:17px;border:0;background:var(--fg);color:var(--bg);display:flex;align-items:center;justify-content:center}
+.create{height:36px;padding:0 14px 0 16px;border-radius:18px;border:0;font-weight:600;font-size:15px;display:flex;align-items:center;gap:6px;background:var(--grad);color:#fff;opacity:.45}
+.create.on{opacity:1}
+.exchips{display:flex;gap:8px;margin-top:-6px}
+.exchip{flex:none;height:42px;padding:0 14px 0 4px;border-radius:21px;border:1px solid var(--line2);background:var(--surface);color:var(--fg);font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.exchip img{width:34px;height:34px;border-radius:17px;object-fit:cover}
+.exchip.on{border-color:var(--accent);background:var(--accent-soft);color:#E2D1FF}
+.sech{display:flex;align-items:baseline;justify-content:space-between}
+.sech b{font-size:20px}.sech span{color:var(--accent-fg);font-size:14px;font-weight:600}
+.cards{display:flex;gap:10px}
+.mvc{flex:none;width:138px;height:190px;border-radius:16px;overflow:hidden;position:relative;border:0;padding:0;background:var(--surface);text-align:left}
+.mvc img{width:100%;height:100%;object-fit:cover;display:block}
+.mvc .ov2{position:absolute;inset:auto 0 0 0;padding:30px 10px 10px;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.85));display:flex;flex-direction:column;gap:2px}
+.mvc .ov2 b{font-size:15px;line-height:1.2;color:#fff}.mvc .ov2 small{font-size:11px;color:#D4D4D8}
+.badge{position:absolute;top:8px;left:8px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:8px;color:#fff;background:#7C3AED}
+.badge.new{background:#B7791F}
+.sc{flex:none;width:138px;border:0;padding:0;background:none;text-align:left;display:flex;flex-direction:column;gap:6px}
+.sc .art{position:relative;width:138px;height:138px;border-radius:14px;overflow:hidden}
+.sc img{width:100%;height:100%;object-fit:cover;display:block}
+.sc b{font-size:15px}.sc small{font-size:11.5px;color:var(--muted)}
+.srow{display:flex;align-items:center;gap:12px}
+.srow img{width:52px;height:52px;border-radius:10px;object-fit:cover;flex:none}
+.srow div{flex:1;min-width:0}.srow b{display:block;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.srow small{font-size:12px;color:var(--muted)}
+.srow button{height:32px;padding:0 14px;border-radius:16px;border:0;background:var(--chip);color:var(--fg);font-weight:600;font-size:13px}
 .nav{flex:none;height:76px;background:var(--bar);border-top:1px solid #1F1F25;display:flex;align-items:center;justify-content:center}
 .nav .col{display:flex;align-items:center;justify-content:space-around;max-width:420px}
 .navb{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;min-width:64px;min-height:44px;justify-content:center;color:var(--dim)}
@@ -170,7 +222,7 @@ img{max-width:100%}
 .ic.send{color:var(--fg2)}
 
 /* attach menu */
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;flex-direction:column;justify-content:flex-end;z-index:20}
+.ov{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;flex-direction:column;justify-content:flex-end;z-index:20}
 .ov>button{flex:1;background:transparent;border:0}
 .menu{background:var(--surface);border-radius:20px 20px 0 0;padding-block:10px max(26px,env(safe-area-inset-bottom,0px))}
 .menu .col{display:flex;flex-direction:column;gap:4px}
@@ -182,6 +234,7 @@ img{max-width:100%}
 
 </head>
 <body>
+<div class="frametoggle" role="group" aria-label="Display"><button type="button" id="fr-phone" class="on">Phone frame</button><button type="button" id="fr-full">Full width</button></div>
 <div id="app"></div>
 
 <script>
@@ -234,6 +287,29 @@ var SKILLS = [
   { name:'Memories MV', meta:'Moments that matter', img:IMG.tpl3, type:'Storytelling', songMode:'any', photos:1, styles:['Golden Hour','Retro VHS','Anime'], needs:['song','photo'], prompt:"about my grandma's favorite moments", photoQ:'Who is this MV about?' },
   { name:'Release My Song', meta:'Your track, your MV', img:IMG.tpl2, type:'Singing', songMode:'own', photos:1, styles:['Cinematic Dark','Retro VHS','Neon City'], needs:['song','photo'], prompt:'for my new single' }
 ];
+var SONG_SKILLS = [
+  { name:'Song from an idea', meta:'Idea → Song', img:IMG.song1, track:'song', kind:'M1', needs:[], prompt:'about a summer road trip with my best friend' },
+  { name:'Song from my lyrics', meta:'Lyrics → Song', img:IMG.song2, track:'song', kind:'M2', needs:[], prompt:"with these lyrics:\n[Verse 1]\nNeon lights bleed into the rain\nCity streets calling out my name\nI've been running from the same old fire" },
+  { name:'Birthday Song', meta:'A song with their name', img:IMG.tpl1, track:'song', kind:'SB', needs:[], prompt:"for my best friend's birthday" },
+  { name:'Song for Someone', meta:'Say it with a song', img:IMG.tStory, track:'song', kind:'SD', needs:[], prompt:'to thank my mom' },
+  { name:'Instrumental Track', meta:'No vocals', img:IMG.neon, track:'song', kind:'SI', needs:[], prompt:'for my travel vlog' }
+];
+var TRENDING = [
+  { img:IMG.tpl2, name:'Cinematic Dark', meta:'Popular | 2-3 min', badge:'HOT' },
+  { img:IMG.tpl1, name:'Dreamy Pastel', meta:'Trending | 1-3 min', badge:'NEW' },
+  { img:IMG.tpl3, name:'Adventurous Echoes', meta:'New | 2-3 min' },
+  { img:IMG.neon, name:'Neon City', meta:'Sing & Story | 2-3 min' }
+];
+var PICKS = [
+  { img:IMG.song1, name:'Pop Anthem', meta:'3 min | Upbeat', badge:'NEW' },
+  { img:IMG.song2, name:'Chill R&B', meta:'2 min | Slow' },
+  { img:IMG.neon, name:'Electronic', meta:'2.5 min | Fast', badge:'HOT' }
+];
+var NEWSONGS = [
+  { title:'Down the Memory Lane', by:'StarryNights', dur:'02:25', cover:IMG.song2 },
+  { title:'Midnight Drive', by:'ChasingWaves', dur:'02:48', cover:IMG.song1 },
+  { title:'Golden Hour', by:'Mia Lee', dur:'02:05', cover:IMG.tpl2 }
+];
 var PRESETS = {
   'Dreamy Pastel':{ img:IMG.tpl1, sub:'Soft, dreamy and romantic' },
   'Cinematic Dark':{ img:IMG.tpl2, sub:'Moody, high contrast, film grain' },
@@ -244,6 +320,7 @@ var PRESETS = {
 };
 function styleStep(list){ return { q:'Which style?', opts:list.map(function(n){ return { label:n, sub:PRESETS[n].sub, img:PRESETS[n].img, imgSt:PRESETS[n].f||'' }; }) }; }
 function bdayLyrics(n){ return '[Verse]\n'+n+', the candles are glowing\nAnother year of you is showing\nAll your friends are here tonight\nTo make your wishes shine so bright\n\n[Chorus]\nHappy birthday, '+n+'!\nThis song is just for you\nHappy birthday, '+n+'!\nMay every dream come true'; }
+function forLyrics(n){ return '[Verse]\n'+n+', you were there through every storm\nHolding on when I was falling\nEvery little thing you gave me\nStill the light that keeps me going\n\n[Chorus]\nThis one is for you, '+n+'\nEvery word I never said\nThis one is for you, '+n+'\nA thank-you written in a song'; }
 var STEP = {
   ratio:{ q:'Which aspect ratio?', opts:[{label:'9:16',sub:'Portrait, for Reels and TikTok'},{label:'16:9',sub:'Landscape, for YouTube'}], free:false },
   quality:{ q:'Which quality?', opts:[{label:'Standard',sub:'720P'},{label:'High',sub:'1080P'}], free:false },
@@ -252,6 +329,7 @@ var STEP = {
   photo:{ q:'Who should star in the MV?', opts:[{label:'Upload Photo',sub:'A photo with a single face'},{label:'Sample Photos',sub:'Pick one of ours'}], free:false },
   photo2:{ q:'Add photos of the two of you', opts:[{label:'Upload 2 Photos',sub:'One photo per person, a single face each'},{label:'Sample Photos',sub:'Pick two of ours'}], free:false },
   bdayName:{ q:"What's the birthday star's name?", opts:[], ph:'e.g. Emma' },
+  forName:{ q:'Who is this song for?', opts:[], ph:'e.g. Mom' },
   type:{ q:'Which kind of MV?', opts:[{label:'Singing',sub:'A virtual artist lip-syncs to your vocals',img:IMG.tSing},{label:'Storytelling',sub:'Your song told as a story in scenes',img:IMG.tStory},{label:'Sing & Story',sub:'Singing mixed with story scenes',img:IMG.tSS}] },
   mode:{ q:'How would you like to create?', opts:[{label:'Create Storyboard First',sub:'Review scenes before rendering · ~1 minute · 20 credits',tag:'Recommended'},{label:'Create MV Directly',sub:'Generate your MV instantly · ~2 minutes · 200 credits'}], free:false },
   genre:{ q:'Which genre?', opts:[{label:'Pop',sub:'Catchy hooks, bright production'},{label:'R&B',sub:'Smooth grooves, soulful vocals'},{label:'Electronic',sub:'Synths and a danceable beat'},{label:'Lo-fi',sub:'Mellow, warm and relaxed'}] },
@@ -270,8 +348,8 @@ var ATTACH = [
 ];
 
 /* ---------------- state ---------------- */
-var S = { screen:'explore', msgs:[], input:'', song:null, photo:null, attach:false, credits:390, playing:null, skill:null, sheet:null };
-var seq=0, flow=null, stage=null, timers=[], mvV=0, sheetDone=null, lastReady=null, raf=0, lastKey='';
+var S = { screen:'explore', msgs:[], input:'', song:null, photo:null, attach:false, credits:390, playing:null, skill:null, sheet:null, exTop:false, tab:'mv' };
+var renderTab='mv', seq=0, flow=null, stage=null, timers=[], mvV=0, sheetDone=null, lastReady=null, raf=0, lastKey='';
 function set(p){ S = Object.assign({}, S, typeof p === 'function' ? p(S) : p); if(!raf) raf = requestAnimationFrame(function(){ raf=0; render(); }); }
 function later(fn,ms){ timers.push(setTimeout(fn,ms)); }
 function mk(list){ return list.map(function(m){ seq+=1; return Object.assign({ id:seq }, m); }); }
@@ -315,7 +393,7 @@ function route(text,song){
   if (/\[(verse|chorus)/i.test(text) || text.split('\n').length >= 4) return 'M2';
   return 'M1';
 }
-function send(override){
+function send(override, fromExplore){
   var s = S; var text = (override != null ? override : s.input).trim();
   if (s.sheet && override == null){ if(!text) return; set({ input:'' }); return sheetAdvance({ free:text }); }
   var song = override != null ? null : s.song, photo = override != null ? null : s.photo, sk = override != null ? null : s.skill;
@@ -333,8 +411,14 @@ function send(override){
     if (/another version/i.test(text)){ flow.regen = true; return startSong("Let's try another version. Pick a new style."); }
     if (/1 min/i.test(text)){ flow.len = '1 min'; return songPlan(); }
   }
-  var kind = sk ? (sk.songMode === 'ai' ? 'M4' : 'M3') : route(text, song);
-  flow = { kind:kind, song:song, photo:photo, sub:sk };
+  var kind;
+  if (sk) kind = sk.track === 'song' ? sk.kind : (sk.songMode === 'ai' ? 'M4' : 'M3');
+  else if (fromExplore && s.tab === 'song') kind = (/\[(verse|chorus)/i.test(text) || text.split('\n').length >= 4) ? 'M2' : 'M1';
+  else if (fromExplore && s.tab === 'mv') kind = 'M3';
+  else kind = route(text, song);
+  flow = { kind:kind, song:song, photo:photo, sub:(sk && sk.track !== 'song') ? sk : null };
+  if (kind === 'SB' || kind === 'SD') return startNamedSong(kind);
+  if (kind === 'SI') return startInstrumental();
   if (kind === 'M1') startSong("Here's what I have in mind for your song. Pick what feels right.");
   else if (kind === 'M2') startSong("Got your lyrics. Pick a style and I'll compose the song.");
   else startMV();
@@ -350,10 +434,31 @@ function startSong(intro){
     });
   });
 }
+function startNamedSong(kind){
+  stage = 'song';
+  say([{ text: kind === 'SB' ? "Let's write a birthday song. Who's it for?" : "Let's write a song for someone special." }], function(){
+    ask([kind === 'SB' ? STEP.bdayName : STEP.forName], function(a){
+      var n = a[0].free || (kind === 'SB' ? 'Emma' : 'Mom');
+      flow.name = n; flow.lyricsFn = kind === 'SB' ? bdayLyrics : forLyrics;
+      flow.style = kind === 'SB' ? { genre:'Pop', mood:'Uplifting', vocal:'Female' } : { genre:'Acoustic', mood:'Romantic', vocal:'Female' };
+      flow.songTitle = kind === 'SB' ? 'Happy Birthday, '+n : 'For '+n;
+      writeLyrics(flow.lyricsFn(n), kind === 'SB' ? "Here's a birthday song for "+n+'.' : "Here's a song for "+n+'.');
+    });
+  });
+}
+function startInstrumental(){
+  stage = 'song';
+  say([{ text:"Here's what I have in mind for your track. Pick what feels right." }], function(){
+    ask([STEP.genre, STEP.mood], function(a){
+      flow.style = { genre:a[0].label||a[0].free, mood:a[1].label||a[1].free, vocal:'Instrumental' };
+      flow.songTitle = 'Wanderlust'; songPlan();
+    });
+  });
+}
 function writeLyrics(lyr,intro){
   say([{ text:intro, lyrics:lyr, icons:'basic' }], function(){
     ask([STEP.lyricsOk], function(a){
-      if (a[0].free) writeLyrics(flow.name ? bdayLyrics(flow.name) : LYRICS2, 'Updated the lyrics.');
+      if (a[0].free) writeLyrics(flow.name ? (flow.lyricsFn || bdayLyrics)(flow.name) : LYRICS2, 'Updated the lyrics.');
       else songPlan();
     });
   });
@@ -361,7 +466,7 @@ function writeLyrics(lyr,intro){
 function songPlan(){
   var st = flow.style || { genre:'Pop', mood:'Romantic', vocal:'Female' };
   var plan = { top:[{k:'Genre',v:st.genre},{k:'Mood',v:st.mood},{k:'Vocal',v:st.vocal},{k:'Length',v:flow.len||'2 min'}],
-    rows:[{k:'Title',v:flow.songTitle||'Golden Hour'},{k:'Lyrics',v:flow.kind==='M2'?'Your lyrics':'Written in this chat'}] };
+    rows:[{k:'Title',v:flow.songTitle||'Golden Hour'},{k:'Lyrics',v:flow.kind==='M2'?'Your lyrics':(flow.kind==='SI'?'None (instrumental)':'Written in this chat')}] };
   say([{ text:"Here's the plan:", plan:plan }], function(){
     ask([STEP.planOk], function(a){
       if (a[0].free) return songPlan();
@@ -559,16 +664,7 @@ function sheetHTML(){
 function dockHTML(){
   var h = '<div class="dock gut"><div class="col">';
   if (S.sheet && S.sheet.collapsed){ var st = S.sheet.steps[S.sheet.step]; h += '<button type="button" class="qpill" data-act="expand"><span>'+esc(st.q)+'</span>'+SVG.up+'</button>'; }
-  if (S.skill){
-    var slots = S.skill.needs.filter(function(n){ return n === 'song' ? !S.song : !S.photo; });
-    h += '<div class="tags"><span class="skt">@'+esc(S.skill.name)+'<button type="button" class="x" data-act="clearSkill" aria-label="Remove skill">×</button></span>'+slots.map(function(n){ return '<button type="button" class="slot" data-act="openAttach">+ '+(n==='song'?'Song':(S.skill.photos===2?'Photos of you two':'Photo'))+'</button>'; }).join('')+'</div>';
-  }
-  if (S.song || S.photo){
-    h += '<div class="tags">';
-    if (S.photo) h += '<span class="att"><img src="'+S.photo+'" alt="Attached photo"><span>Photo</span><button type="button" class="x" data-act="rmPhoto" aria-label="Remove photo">×</button></span>';
-    if (S.song) h += '<span class="att"><img src="'+S.song.cover+'" alt=""><span>'+esc(S.song.title)+'</span><button type="button" class="x" data-act="rmSong" aria-label="Remove song">×</button></span>';
-    h += '</div>';
-  }
+  h += tagsHTML();
   h += '<div class="ibar"><button type="button" class="plus" data-act="openAttach" aria-label="Add photo or song">'+SVG.plus+'</button><textarea id="msg" rows="1" aria-label="Message" placeholder="Type your message here ...">'+esc(S.input)+'</textarea><button type="button" class="ic" aria-label="Voice input">'+SVG.mic+'</button><button type="button" class="ic send" data-act="send" aria-label="Send">'+SVG.send+'</button></div>';
   return h+'</div></div>';
 }
@@ -579,11 +675,45 @@ function chatHTML(){
   h += '<div class="stream gut" id="stream"><div class="col">'+[welcome].concat(S.msgs).map(function(m){ return msgHTML(m, hasUser); }).join('')+'</div></div>';
   h += (S.sheet && !S.sheet.collapsed) ? sheetHTML() : dockHTML();
   h += '</div>';
-  if (S.attach) h += '<div class="ov"><button type="button" data-act="closeAttach" aria-label="Close"></button><div class="menu gut"><div class="col"><span class="grab"></span>'+ATTACH.map(function(a,i){ return '<button type="button" class="mi" data-act="attach" data-i="'+i+'"><i>'+icon(a.d)+'</i><span><b>'+a.label+'</b><small>'+a.sub+'</small></span></button>'; }).join('')+'</div></div></div>';
+  if (S.attach) h += attachHTML();
   return h;
 }
 function exploreHTML(){
-  return '<div class="screen"><div class="ex"><img src="'+IMG.explore+'" alt="YouCam Muse Explore"></div><nav class="nav gut"><div class="col"><button type="button" class="navb on">'+SVG.explore+'Explore</button><button type="button" class="fab" data-act="goChat" aria-label="Open AI Agent">'+SVG.chat+'</button><button type="button" class="navb">'+SVG.history+'History</button></div></nav></div>';
+  var has = !!S.input.trim();
+  var h = '<div class="screen"><div class="ex gut" id="ex"><div class="col">';
+  h += '<div class="exhd"><b>YouCam Muse</b><button type="button" class="round crown" aria-label="Muse Pro"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg></button><button type="button" class="round" aria-label="Account"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button></div>';
+  var song = S.tab === 'song';
+  h += '<div class="cwrap"><div class="ftabs" role="tablist"><button type="button" role="tab" aria-selected="'+!song+'" class="ftab'+(song?'':' on')+'" data-act="tab" data-t="mv">'+icon('M4 8h16v11H4zM4 8l2-4h12l2 4M9 12l5 2.5L9 17z')+'Music Video</button><button type="button" role="tab" aria-selected="'+song+'" class="ftab'+(song?' on':'')+'" data-act="tab" data-t="song">'+icon('M9 18V6l11-2v12M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM17 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6z')+'Song</button></div>';
+  h += '<div class="composer">';
+  h += tagsHTML();
+  h += '<textarea id="exin" rows="2" aria-label="Describe your idea" placeholder="'+(song?'Describe your song or paste your lyrics...':'Describe your idea to create an engaging video...')+'">'+esc(S.input)+'</textarea>';
+  h += '<div class="crow"><button type="button" class="cplus" data-act="openAttach" aria-label="Add photo or song">'+SVG.plus+'</button><span class="sp"></span><button type="button" class="wand" data-act="enhance" aria-label="Enhance"'+(has?'':' hidden')+'><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20L15 9M14 4v2M19 9h2M17.5 5.5L19 4M6 6l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/></svg></button><button type="button" class="create'+(has||S.skill?' on':'')+'" data-act="create">Create <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>';
+  h += '</div></div>';
+  var pills = song ? SONG_SKILLS : SKILLS;
+  h += '<div class="exchips scroll-x" id="exchips">'+pills.map(function(c,i){ var on = S.skill && S.skill.name === c.name; return '<button type="button" class="exchip'+(on?' on':'')+'" data-act="exchip" data-i="'+i+'"><img src="'+c.img+'" alt="">'+esc(c.name)+'</button>'; }).join('')+'</div>';
+  h += '<div class="sech"><b>Trending MV</b><span>See all ›</span></div><div class="cards scroll-x">'+TRENDING.map(function(c,i){ return '<button type="button" class="mvc" data-act="trend" data-i="'+i+'"><img src="'+c.img+'" alt="">'+(c.badge?'<span class="badge'+(c.badge==='NEW'?' new':'')+'">'+c.badge+'</span>':'')+'<span class="ov2"><b>'+esc(c.name)+'</b><small>'+esc(c.meta)+'</small></span></button>'; }).join('')+'</div>';
+  h += '<div class="sech"><b>Top Picks Songs</b><span>See all ›</span></div><div class="cards scroll-x">'+PICKS.map(function(c){ return '<div class="sc"><div class="art"><img src="'+c.img+'" alt="">'+(c.badge?'<span class="badge'+(c.badge==='NEW'?' new':'')+'">'+c.badge+'</span>':'')+'</div><b>'+esc(c.name)+'</b><small>'+esc(c.meta)+'</small></div>'; }).join('')+'</div>';
+  h += '<div class="sech"><b>New Songs</b><span>See all ›</span></div>'+NEWSONGS.map(function(s,i){ return '<div class="srow"><img src="'+s.cover+'" alt=""><div><b>'+esc(s.title)+'</b><small>'+esc(s.by)+' · '+s.dur+'</small></div><button type="button" data-act="songmv" data-i="'+i+'">Create</button></div>'; }).join('');
+  h += '</div></div><nav class="nav gut"><div class="col"><button type="button" class="navb on">'+SVG.explore+'Explore</button><button type="button" class="fab" data-act="goChat" aria-label="Open AI Agent">'+SVG.chat+'</button><button type="button" class="navb">'+SVG.history+'History</button></div></nav></div>';
+  if (S.attach) h += attachHTML();
+  return h;
+}
+function tagsHTML(){
+  var h = '';
+  if (S.skill){
+    var slots = S.skill.needs.filter(function(n){ return n === 'song' ? !S.song : !S.photo; });
+    h += '<div class="tags"><span class="skt">@'+esc(S.skill.name)+'<button type="button" class="x" data-act="clearSkill" aria-label="Remove skill">×</button></span>'+slots.map(function(n){ return '<button type="button" class="slot" data-act="openAttach">+ '+(n==='song'?'Song':(S.skill.photos===2?'Photos of you two':'Photo'))+'</button>'; }).join('')+'</div>';
+  }
+  if (S.song || S.photo){
+    h += '<div class="tags">';
+    if (S.photo) h += '<span class="att"><img src="'+S.photo+'" alt="Attached photo"><span>Photo</span><button type="button" class="x" data-act="rmPhoto" aria-label="Remove photo">×</button></span>';
+    if (S.song) h += '<span class="att"><img src="'+S.song.cover+'" alt=""><span>'+esc(S.song.title)+'</span><button type="button" class="x" data-act="rmSong" aria-label="Remove song">×</button></span>';
+    h += '</div>';
+  }
+  return h;
+}
+function attachHTML(){
+  return '<div class="ov"><button type="button" data-act="closeAttach" aria-label="Close"></button><div class="menu gut"><div class="col"><span class="grab"></span>'+ATTACH.map(function(a,i){ return '<button type="button" class="mi" data-act="attach" data-i="'+i+'"><i>'+icon(a.d)+'</i><span><b>'+a.label+'</b><small>'+a.sub+'</small></span></button>'; }).join('')+'</div></div></div>';
 }
 function autosize(ta){ ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 170)+'px'; }
 var app = document.getElementById('app');
@@ -591,19 +721,35 @@ function render(){
   var ae = document.activeElement, fid = ae && ae.id, s0 = ae && ae.selectionStart, s1 = ae && ae.selectionEnd;
   var st = document.getElementById('stream'), prevTop = st ? st.scrollTop : null;
   var sk = document.getElementById('skills'), prevLeft = sk ? sk.scrollLeft : 0;
+  var ex = document.getElementById('ex'), exTop = ex ? ex.scrollTop : 0;
+  var ec = document.getElementById('exchips'), ecLeft = ec ? ec.scrollLeft : 0, ecTab = S.tab;
   app.innerHTML = S.screen === 'explore' ? exploreHTML() : chatHTML();
   var ta = document.getElementById('msg'); if (ta) autosize(ta);
+  var exin = document.getElementById('exin'); if (exin) autosize(exin);
+  var ec2 = document.getElementById('exchips'); if (ec2 && renderTab === ecTab) ec2.scrollLeft = ecLeft; renderTab = S.tab;
+  var ex2 = document.getElementById('ex'); if (ex2){ ex2.scrollTop = S.exTop ? 0 : exTop; if (S.exTop){ S.exTop = false; if (exin) exin.focus({ preventScroll:true }); } }
   var sk2 = document.getElementById('skills'); if (sk2) sk2.scrollLeft = prevLeft;
   if (fid){ var el = document.getElementById(fid); if (el){ el.focus({ preventScroll:true }); try { el.setSelectionRange(s0, s1); } catch(e){} } }
   var s2 = document.getElementById('stream');
   if (s2){
     var key = S.msgs.length+'|'+(S.sheet ? S.sheet.step+':'+S.sheet.collapsed+':'+S.sheet.steps.length : '-');
-    if (key !== lastKey || prevTop == null){ s2.scrollTop = s2.scrollHeight; lastKey = key; }
+    if (key !== lastKey || prevTop == null){
+      var toBottom = function(){ s2.scrollTop = s2.scrollHeight; };
+      toBottom(); lastKey = key;
+      requestAnimationFrame(toBottom); setTimeout(toBottom, 80);
+      s2.querySelectorAll('img').forEach(function(im){ if (!im.complete) im.addEventListener('load', toBottom, { once:true }); });
+    }
     else s2.scrollTop = prevTop;
   }
 }
 var ACT = {
-  goChat:function(){ set({ screen:'chat' }); },
+  goChat:function(){ set({ screen:'chat', input:'', skill:null, song:null, photo:null }); },
+  create:function(){ if (!S.input.trim() && !S.skill && !S.song && !S.photo) { var e = document.getElementById('exin'); if (e) e.focus(); return; } set({ screen:'chat' }); send(null, true); },
+  tab:function(d){ if (S.tab === d.t) return; set({ tab:d.t, skill:null, input:S.skill ? '' : S.input }); },
+  enhance:function(){ if (S.input.trim() && !/cinematic lighting/.test(S.input)) set({ input:S.input.trim().replace(/[.!]$/,'')+', with cinematic lighting, emotional close-ups and a strong chorus moment' }); },
+  exchip:function(d){ var c = (S.tab === 'song' ? SONG_SKILLS : SKILLS)[+d.i]; if (S.skill && S.skill.name === c.name) set({ skill:null, input:'' }); else set({ skill:c, input:'Use @'+c.name+' '+c.prompt }); },
+  trend:function(d){ var c = TRENDING[+d.i]; set({ tab:'mv', skill:null, input:'Make a '+c.name+' style MV for my song', exTop:true }); },
+  songmv:function(d){ var s = NEWSONGS[+d.i]; set({ tab:'mv', skill:null, song:{ title:s.title, dur:s.dur, cover:s.cover, src:'Song Library' }, input:'Make an MV with "'+s.title+'"', exTop:true }); },
   goExplore:function(){ set({ screen:'explore' }); },
   newChat:newChat,
   skill:function(d){ var t = SKILLS[+d.i]; set({ skill:t, input:'Use @'+t.name+' '+t.prompt }); },
@@ -626,13 +772,24 @@ var ACT = {
 app.addEventListener('click', function(e){ var t = e.target.closest('[data-act]'); if (!t) return; var f = ACT[t.dataset.act]; if (f) f(t.dataset); });
 app.addEventListener('input', function(e){
   if (e.target.id === 'msg'){ S.input = e.target.value; autosize(e.target); }
+  else if (e.target.id === 'exin'){ S.input = e.target.value; autosize(e.target); var has = !!S.input.trim(); var w = app.querySelector('.wand'); if (w) w.hidden = !has; var c = app.querySelector('.create'); if (c) c.classList.toggle('on', has || !!S.skill); }
   else if (e.target.id === 'free'){ var v = e.target.value; set(function(s){ return { sheet:Object.assign({}, s.sheet, { free:v, sel:v ? -1 : s.sheet.sel }) }; }); }
 });
 app.addEventListener('keydown', function(e){
   if (e.isComposing) return;
   if (e.target.id === 'msg' && e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); send(); }
+  else if (e.target.id === 'exin' && e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); ACT.create(); }
   else if (e.target.id === 'free' && e.key === 'Enter'){ e.preventDefault(); sheetNext(); }
 });
+function setFrame(full){
+  document.body.classList.toggle('full', full);
+  document.getElementById('fr-phone').classList.toggle('on', !full);
+  document.getElementById('fr-full').classList.toggle('on', full);
+  try { localStorage.setItem('ycm-frame', full ? 'full' : 'phone'); } catch(e){}
+}
+document.getElementById('fr-phone').addEventListener('click', function(){ setFrame(false); });
+document.getElementById('fr-full').addEventListener('click', function(){ setFrame(true); });
+try { if (localStorage.getItem('ycm-frame') === 'full') setFrame(true); } catch(e){}
 render();
 </script>
 
